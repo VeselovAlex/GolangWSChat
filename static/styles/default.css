@@ -1,0 +1,45 @@
+@font-face {
+	font-family: "PT Sans";
+	src: url(https://fonts.googleapis.com/css?family=PT+Sans&subset=latin,cyrillic);
+}
+
+@font-face {
+	font-family: "PT Sans Caption";
+	src: url(https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700&subset=latin,cyrillic);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	background: #ccc;
+	min-height: 100%;
+	font-family: "Pt Sans", ssans-serif;
+}
+
+header {
+	font-family: "PT Sans Caption", sans-serif;
+	flex-grow: 0;
+}
+
+body {
+	display: flex;
+	
+	height: 100%;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	font-family: "PT Sans", sans-serif;
+}
+
+section {
+	width: 80%;
+	margin: auto;
+	flex-grow: 1;
+}
+
+footer {
+	flex-grow: 0;
+	box-sizing: border-box;
+}

@@ -1,0 +1,7 @@
+
+##Get rid of binaries
+*.exe
+*.
+
+##VSCode typings
+typings/
