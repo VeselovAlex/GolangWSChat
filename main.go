@@ -42,18 +42,21 @@ func main() {
 	})
 
 	loggedAction("Serving chat room", func() {
-		r := NewRoom()
-		http.Handle("/ws", r)
-		go r.Run()
+		room := NewRoom()
+		http.Handle("/ws", room)
+		go room.Run()
 	})
-	loggedAction("Serving login servlet", func() {
-		http.HandleFunc("/login", handleLogin)
+
+	loggedAction("Serving login", func() {
+		login := new(Login)
+		http.Handle("/login", login)
 	})
 
 	loggedAction("Serving home", func() {
-		home := &HomeHandler{}
+		home := new(Home)
 		http.Handle("/", home)
 	})
+
 	log.Println("Server initialization complete")
 	log.Println("Server starts on", ServerAddr)
 	err = http.ListenAndServe(ServerAddr, nil)

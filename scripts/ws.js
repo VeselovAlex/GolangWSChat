@@ -2,7 +2,7 @@ $(function () {
   var ws = new WebSocket("ws://" + location.host + "/ws");
   
   ws.onclose = function () {
-    document.cookie = "login=; expires=-1"
+    document.cookie = "login=; max-age=-1"
   }
   
   ws.onmessage = function (event) {

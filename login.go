@@ -7,9 +7,9 @@ import (
 	"code.google.com/p/go-uuid/uuid"
 )
 
-var nicknames = make(map[string]string)
+type Login struct{}
 
-func handleLogin(w http.ResponseWriter, r *http.Request) {
+func (l *Login) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving /login")
 	method := r.Method
 	/*Only POST allowed*/
