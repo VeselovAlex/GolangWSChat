@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ServerHost = "127.0.0.1"
+	ServerHost = ""
 	ServerPort = "8080"
 	ServerAddr = ServerHost + ":" + ServerPort
 )

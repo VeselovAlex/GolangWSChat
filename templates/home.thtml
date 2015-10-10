@@ -1,40 +1,28 @@
 {{ define "header" }}
 <!DOCTYPE html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="styles/default.css">
-<script src="scripts/jquery-2.1.4.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,300&subset=latin,cyrillic">
 {{ end }}
-
-{{ define "footer" }}
-<footer>
-  <p>Powered by <a href="http://golang.org">Gophers</a></p>
-</footer>
-{{ end }}
-
 {{ define "room" }}
 {{ template "header" }}
 <header>
-  <h1>Простой чатик</h1>
-  <h2>на WebSocket'ах</h2>
+  <h1>Простой чатик на WebSocket'ах</h1>
 </header>
-<section>
-  <h2>Привет!</h2>
-  <div class="msg-box"></div>
-  <form id="msg-form">
-    <input class="msg-input" placeholder="Введите ваше сообщение">
-    <input type="submit" value="Отправить">
-  </form>
-</section>
+<section class="msg-box"></section>
+<form id="msg-form">
+  <input class="msg-input" placeholder="Сообщение...">
+  <input class="msg-btn" type="submit" value=">>">
+</form>
+<script src="scripts/jquery-2.1.4.min.js"></script>
 <script src="scripts/ws.js"></script>
-{{ template "footer" }}
 {{ end }}
-
 {{ define "login" }}
 {{ template "header" }}
-<form action="/login" method="post">
-  <label for="input-nick">
-  <input type="text" id="input-nick" name="nickname" placeholder="Ваше имя" required>
+<form id="form-login" action="/login" method="post">
+  <label for="input-nick" autocomplete="off">Как Вас зовут?</label>
+  <input type="text" id="input-nick" name="nickname" required>
   <input type="submit" value="Войти">
 </form>
-{{ template "footer" }}
 {{ end }}
