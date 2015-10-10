@@ -1,18 +1,18 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Open Sans", sans-serif;
 }
 
 body {
   background-color: #2C3E50;
-  width: 95vw;
+  width: 100vw;
   height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
 }
 
 @media only screen and (min-width: 720px) {
@@ -95,13 +95,13 @@ input:focus {
 
 .message .author {
   color: #3498DB;
-  font-weight: 300;
   padding-bottom: 1em;
-  word-break: break-all;
+  word-wrap: break-word;
 }
 
 .message .content {
   font-size: 120%;
+  font-weight: 300;
   word-break: break-all;
 }
 

@@ -1,3 +1,4 @@
+/* global $ */
 $(function () {
   var ws = new WebSocket("ws://" + location.host + "/ws");
   
@@ -13,6 +14,7 @@ $(function () {
     $("<div />").addClass("author").text(msg.Author).appendTo(wrapper);
     $("<div />").addClass("content").text(msg.Content).appendTo(wrapper);
     $(".msg-box").append(wrapper);
+    wrapper.get(0).scrollIntoView();
   };
   
   ws.onerror = function(err) {
