@@ -12,7 +12,7 @@
 </header>
 <section class="msg-box"></section>
 <form id="msg-form">
-  <input class="msg-input" placeholder="Сообщение...">
+  <input class="msg-input" placeholder="Сообщение..." autocomplete="off">
   <input class="msg-btn" type="submit" value=">>">
 </form>
 <script src="scripts/jquery-2.1.4.min.js"></script>
