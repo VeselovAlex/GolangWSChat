@@ -18,17 +18,33 @@ var upgrader = &ws.Upgrader{
 }
 
 //Implement http.Handler
-func (room *Room) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (room *Room) ServeHTTP(w http.ResponseWriter, r *http.Request) {	
+	/*Switch to WebSocket protocol*/
 	socket, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Fatal("Error in Room.ServeHTTP :", err)
+		log.Println("Error in Room.ServeHTTP :", err)
 		return
 	}
-
+	
+	cookie, err := r.Cookie("login")
+	if err != nil {
+		log.Println("Error in Room.ServeHTTP :", err)
+		return
+	}
+	name, ok := nicknames[cookie.Value]
+	
+	if !ok {
+		cookie.MaxAge = -1
+		http.SetCookie(w, cookie)
+		log.Println("Error in Room.ServeHTTP :", "Bad cookie")
+		return
+	}
+	
 	client := &Client{
 		Conn: socket,
-		Msg:  make(chan []byte, MsgBufferSize),
+		Msg:  make(chan *Message, MsgBufferSize),
 		Room: room,
+		Name: name,
 	}
 
 	room.Join <- client

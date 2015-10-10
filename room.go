@@ -7,7 +7,7 @@ const (
 )
 
 type Room struct {
-	Send  chan []byte
+	Send  chan *Message
 	Join  chan *Client
 	Leave chan *Client
 
@@ -16,7 +16,7 @@ type Room struct {
 
 func NewRoom() *Room {
 	r := new(Room)
-	r.Send = make(chan []byte, MsgBufferSize)
+	r.Send = make(chan *Message, MsgBufferSize)
 	r.Join = make(chan *Client, UserBufferSize)
 	r.Leave = make(chan *Client, UserBufferSize)
 	r.Users = make(map[*Client]bool)
