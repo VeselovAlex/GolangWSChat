@@ -14,11 +14,6 @@ const (
 	ServerAddr = ServerHost + ":" + ServerPort
 )
 
-func serveStatic(w http.ResponseWriter, r *http.Request) {
-	log.Println("Serving", r.URL.Path)
-	http.ServeFile(w, r, r.URL.Path[1:]) // Omit first '/'
-}
-
 //Shitty, but works
 func main() {
 	/*Init log file*/
@@ -37,8 +32,9 @@ func main() {
 	log.Println("Server init started")
 
 	loggedAction("Serving assets", func() {
-		http.HandleFunc("/scripts/", serveStatic)
-		http.HandleFunc("/styles/", serveStatic)
+		static := new(Static)
+		http.Handle("/scripts/", static)
+		http.Handle("/styles/", static)
 	})
 
 	loggedAction("Serving chat room", func() {

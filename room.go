@@ -106,7 +106,9 @@ func getName(w http.ResponseWriter, r *http.Request) string {
 
 	name, ok := nicknames[cookie.Value]
 	if !ok { /*Bad cookie*/
+		// Probably useless, delete later
 		http.SetCookie(w, &http.Cookie{Name: "login", Value: "", MaxAge: -1})
+		//
 		log.Println("Error reading user nick:", "bad cookie")
 		return ""
 	}
