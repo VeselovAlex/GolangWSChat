@@ -2,28 +2,32 @@
 package main
 
 import (
-	ws "github.com/gorilla/websocket"
 	"encoding/json"
+	"log"
+
+	ws "github.com/gorilla/websocket"
 )
 
 type Client struct {
 	Conn *ws.Conn
 	Msg  chan *Message
 	Room *Room
-	
+
 	Name string
 }
 
 func (c *Client) Read() {
-	var err error
-	for err == nil {
+	for {
 		/*While connection is active*/
 		if _ /*Type*/, msg, err := c.Conn.ReadMessage(); err == nil {
 			wrap := NewMessage(c.Name, msg)
 			c.Room.Send <- wrap
+		} else {
+			break
 		}
 	}
 	c.Conn.Close()
+	log.Println("User", c.Name, "connection closed", "(reading)")
 }
 
 func (c *Client) Write() {
@@ -39,4 +43,5 @@ func (c *Client) Write() {
 		}
 	}
 	c.Conn.Close()
+	log.Println("User", c.Name, "connection closed", "(writing)")
 }

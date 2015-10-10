@@ -18,28 +18,25 @@ var upgrader = &ws.Upgrader{
 }
 
 //Implement http.Handler
-func (room *Room) ServeHTTP(w http.ResponseWriter, r *http.Request) {	
+func (room *Room) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Println("New room connection established")
 	/*Switch to WebSocket protocol*/
 	socket, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println("Error in Room.ServeHTTP :", err)
+		log.Println("Error serving Room:", err)
 		return
 	}
-	
-	cookie, err := r.Cookie("login")
-	if err != nil {
-		log.Println("Error in Room.ServeHTTP :", err)
+
+	name := getName(w, r)
+	if len(name) == 0 {
+		log.Println("Error serving Room:", "bad user data")
+		errMsg := ws.FormatCloseMessage(ws.CloseUnsupportedData,
+			"Can not recognise user data")
+		socket.WriteMessage(ws.CloseMessage, errMsg)
+		socket.Close()
 		return
 	}
-	name, ok := nicknames[cookie.Value]
-	
-	if !ok {
-		cookie.MaxAge = -1
-		http.SetCookie(w, cookie)
-		log.Println("Error in Room.ServeHTTP :", "Bad cookie")
-		return
-	}
-	
+
 	client := &Client{
 		Conn: socket,
 		Msg:  make(chan *Message, MsgBufferSize),
@@ -52,4 +49,21 @@ func (room *Room) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer func() { room.Leave <- client }()
 	go client.Write()
 	client.Read()
+}
+
+func getName(w http.ResponseWriter, r *http.Request) string {
+	cookie, err := r.Cookie("login")
+	if err != nil { /*No cookie*/
+		log.Println("Error reading user nick:", err)
+		return ""
+	}
+
+	name, ok := nicknames[cookie.Value]
+	if !ok { /*Bad cookie*/
+		cookie.MaxAge = -1
+		http.SetCookie(w, cookie)
+		log.Println("Error reading user nick:", "bad cookie")
+		return ""
+	}
+	return name
 }

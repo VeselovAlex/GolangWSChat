@@ -2,8 +2,16 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
+	"os"
+)
+
+const (
+	ServerHost = "127.0.0.1"
+	ServerPort = "8080"
+	ServerAddr = ServerHost + ":" + ServerPort
 )
 
 func serveStatic(w http.ResponseWriter, r *http.Request) {
@@ -11,23 +19,51 @@ func serveStatic(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, r.URL.Path[1:]) // Omit first '/'
 }
 
-//Shitty, but works	
+//Shitty, but works
 func main() {
-	http.HandleFunc("/scripts/", serveStatic)
-	
-	http.HandleFunc("/styles/", serveStatic)
-	
-	r := NewRoom()
-	http.Handle("/ws", r)
-	go r.Run()
-	
-	http.HandleFunc("/login", handleLogin)
-
-	home := &HomeHandler{}
-	http.Handle("/", home)
-
-	err := http.ListenAndServe(":8080", nil)
+	/*Init log file*/
+	logFile, err := os.OpenFile("log.txt", os.O_APPEND, 0)
 	if err != nil {
-		log.Fatal("Unable to start server on :8080 :", err)
+		logFile, err = os.Create("log.txt")
+		if err != nil {
+			log.Fatalln("Can not init log file")
+		}
 	}
+	defer logFile.Close()
+	logFile.Write([]byte("------------------------------------------------\n"))
+	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
+
+	log.Println("Simple Go chat server")
+	log.Println("Server init started")
+
+	loggedAction("Serving assets", func() {
+		http.HandleFunc("/scripts/", serveStatic)
+		http.HandleFunc("/styles/", serveStatic)
+	})
+
+	loggedAction("Serving chat room", func() {
+		r := NewRoom()
+		http.Handle("/ws", r)
+		go r.Run()
+	})
+	loggedAction("Serving login servlet", func() {
+		http.HandleFunc("/login", handleLogin)
+	})
+
+	loggedAction("Serving home", func() {
+		home := &HomeHandler{}
+		http.Handle("/", home)
+	})
+	log.Println("Server initialization complete")
+	log.Println("Server starts on", ServerAddr)
+	err = http.ListenAndServe(ServerAddr, nil)
+	if err != nil {
+		log.Fatal("Unable to start server on", ServerAddr, ":", err)
+	}
+}
+
+func loggedAction(msg string, action func()) {
+	log.Println(msg)
+	action()
+	log.Println("DONE")
 }

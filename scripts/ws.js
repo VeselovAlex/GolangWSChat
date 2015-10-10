@@ -30,4 +30,8 @@ $(function () {
     msgIn.val("");
     return false;
   });
+  
+  $(window).unload(function(){
+    ws.close()
+  })
 })

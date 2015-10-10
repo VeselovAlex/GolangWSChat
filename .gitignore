@@ -5,3 +5,6 @@
 
 ##VSCode typings
 typings/
+
+##Do not commit logs
+log*

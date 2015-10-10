@@ -1,6 +1,10 @@
 // room
 package main
 
+import (
+	"log"
+)
+
 const (
 	MsgBufferSize  = 8
 	UserBufferSize = 4
@@ -27,9 +31,11 @@ func (r *Room) Run() {
 	for {
 		select {
 		case client := <-r.Leave:
+			log.Println("User", client.Name, "left the channel")
 			delete(r.Users, client)
 			close(client.Msg)
 		case client := <-r.Join:
+			log.Println("User", client.Name, "joined the channel")
 			r.Users[client] = true
 		case msg := <-r.Send:
 			//Send to each client
@@ -38,6 +44,7 @@ func (r *Room) Run() {
 				case c.Msg <- msg: //Client is able to receive
 					// Sent
 				default:
+					log.Println("User", c.Name, "left the channel while sending message")
 					// Bad client, close
 					delete(r.Users, c)
 					close(c.Msg)
