@@ -96,7 +96,7 @@ input:focus {
 .message .author, .message .timestamp {
   display: inline-block;
   color: #3498DB;
-  padding-bottom: 1em;
+  padding-bottom: 0.5em;
   word-wrap: break-word;
 }
 
@@ -106,11 +106,10 @@ input:focus {
   font-size: 80%;
 }
 
-
 .message .content {
   font-size: 120%;
   font-weight: 300;
-  word-break: break-all;
+  word-wrap: break-word;
 }
 
 #form-login {
