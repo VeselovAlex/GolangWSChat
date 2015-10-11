@@ -93,11 +93,19 @@ input:focus {
   padding: 0.5em 1em;
 }
 
-.message .author {
+.message .author, .message .timestamp {
+  display: inline-block;
   color: #3498DB;
   padding-bottom: 1em;
   word-wrap: break-word;
 }
+
+.message .timestamp {
+  float: right;
+  font-weight: 700;
+  font-size: 80%;
+}
+
 
 .message .content {
   font-size: 120%;

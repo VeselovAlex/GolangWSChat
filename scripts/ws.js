@@ -12,6 +12,7 @@ $(function () {
     var msg = JSON.parse(event.data);
     console.log(msg);
     $("<div />").addClass("author").text(msg.Author).appendTo(wrapper);
+    $("<div />").addClass("timestamp").text(msg.Timestamp.match(/(\d{2}):(\d{2}):(\d{2})/)[0]).appendTo(wrapper);
     $("<div />").addClass("content").text(msg.Content).appendTo(wrapper);
     $(".msg-box").append(wrapper);
     wrapper.get(0).scrollIntoView();
