@@ -8,16 +8,17 @@ $(function () {
   
   ws.onmessage = function (event) {
     var wrapper = $("<div />").addClass("message");
-    console.log(event.data);
     var msg = JSON.parse(event.data);
     $("<div />").addClass("author").text(msg.Author).appendTo(wrapper);
 	  var tzH = (new Date()).getTimezoneOffset() / 60;
 	  var tzM = (new Date()).getTimezoneOffset() % 60;
     var serverTime = msg.Timestamp.match(/(\d{2}):(\d{2}):(\d{2})/);
+    serverTime[1] -= tzH;
+    serverTime[2] -= tzM;
     var serverTZ = msg.Timestamp.match(/([+-]\d{2}):(\d{2})/);
     if (serverTZ) {
-        serverTime[1] -= (tzH + parseInt(serverTZ[1]));
-        serverTime[2] -= (tzM + parseInt(serverTZ[2]));
+        serverTime[1] -= serverTZ[1];
+        serverTime[2] -= serverTZ[2];
     }
     var time = serverTime.slice(1).join(":");
     $("<div />").addClass("timestamp").text(time).appendTo(wrapper);
