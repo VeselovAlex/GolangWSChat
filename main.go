@@ -8,11 +8,7 @@ import (
 	"os"
 )
 
-const (
-	ServerHost = ""
-	ServerPort = ""
-	ServerAddr = ServerHost + ":" + ServerPort
-)
+var ServerAddr = ":" + os.Getenv("PORT")
 
 //Shitty, but works
 func main() {
