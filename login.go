@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/VeselovAlex/GolangWSChat/Godeps/_workspace/src/github.com/pborman/uuid"
 )
 
 type Login struct{}

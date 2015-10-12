@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	ws "github.com/gorilla/websocket"
+	ws "github.com/VeselovAlex/GolangWSChat/Godeps/_workspace/src/github.com/gorilla/websocket"
 )
 
 const (
