@@ -10,9 +10,17 @@ $(function () {
     var wrapper = $("<div />").addClass("message");
     console.log(event.data);
     var msg = JSON.parse(event.data);
-    console.log(msg);
     $("<div />").addClass("author").text(msg.Author).appendTo(wrapper);
-    $("<div />").addClass("timestamp").text(msg.Timestamp.match(/(\d{2}):(\d{2}):(\d{2})/)[0]).appendTo(wrapper);
+	  var tzH = (new Date()).getTimezoneOffset() / 60;
+	  var tzM = (new Date()).getTimezoneOffset() % 60;
+    var serverTime = msg.Timestamp.match(/(\d{2}):(\d{2}):(\d{2})/);
+    var serverTZ = msg.Timestamp.match(/([+-]\d{2}):(\d{2})/);
+    if (serverTZ) {
+        serverTime[1] -= (tzH + parseInt(serverTZ[1]));
+        serverTime[2] -= (tzM + parseInt(serverTZ[2]));
+    }
+    var time = serverTime.slice(1).join(":");
+    $("<div />").addClass("timestamp").text(time).appendTo(wrapper);
     $("<div />").addClass("content").text(msg.Content).appendTo(wrapper);
     $(".msg-box").append(wrapper);
     wrapper.get(0).scrollIntoView();
