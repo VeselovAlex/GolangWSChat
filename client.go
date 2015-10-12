@@ -4,6 +4,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"time"
 
 	ws "github.com/VeselovAlex/GolangWSChat/Godeps/_workspace/src/github.com/gorilla/websocket"
 )
@@ -19,7 +20,7 @@ type Client struct {
 func (c *Client) Read() {
 	for {
 		/*While connection is active*/
-		if _ /*Type*/, msg, err := c.Conn.ReadMessage(); err == nil {
+		if _, msg, err := c.Conn.ReadMessage(); err == nil {
 			wrap := NewMessage(c.Name, msg)
 			c.Room.Send <- wrap
 		} else {
@@ -31,17 +32,26 @@ func (c *Client) Read() {
 }
 
 func (c *Client) Write() {
-	for msg := range c.Msg {
-		/*Send incoming messages to remote receiver*/
-		jsonMsg, err := json.Marshal(msg)
-		if err != nil {
-			break
+	ticker := time.NewTicker(50 * time.Second)
+	var err error = nil
+	for {
+		select {
+		case msg := <-c.Msg:
+			/*Send incoming messages to remote receiver*/
+			jsonMsg, err := json.Marshal(msg)
+			if err != nil {
+				break
+			}
+			err = c.Conn.WriteMessage(ws.TextMessage, jsonMsg)
+		case <-ticker.C:
+			//Keep connection established
+			err = c.Conn.WriteMessage(ws.PongMessage, nil)
 		}
-		err = c.Conn.WriteMessage(ws.TextMessage, jsonMsg)
 		if err != nil {
 			break
 		}
 	}
 	c.Conn.Close()
+	ticker.Stop()
 	log.Println("User", c.Name, "connection closed", "(writing)")
 }
